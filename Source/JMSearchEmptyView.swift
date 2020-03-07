@@ -39,7 +39,7 @@ class JMSearchEmptyView: UIView {
     
     @objc func fackbackAction() {
         print("fack back action")
-        routerEvent(eventName: kEBookFadebackEventName, info: nil)
+        //routerEvent(eventName: kEBookFadebackEventName, info: nil)
     }
     
     required init?(coder aDecoder: NSCoder) {

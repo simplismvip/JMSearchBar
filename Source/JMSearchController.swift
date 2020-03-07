@@ -80,10 +80,10 @@ extension JMSearchController {
                 print("内容输出:\($0)")
                 let querytext = $0
                 DispatchQueue.global().async {
-                    let result = SQLHelper.share.fetchSearchResultData(querytext)
-                    DispatchQueue.main.async {
-                        self?.container.listView.reloadDatasource(result)
-                    }
+//                    let result = SQLHelper.share.fetchSearchResultData(querytext)
+//                    DispatchQueue.main.async {
+//                        self?.container.listView.reloadDatasource(result)
+//                    }
                 }
             }).disposed(by: bag)
         

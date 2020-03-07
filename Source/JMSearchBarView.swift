@@ -21,7 +21,7 @@ class JMTextFieldView: UITextField {
         self.textColor = textColor
         self.font = UIFont.systemFont(ofSize: 14)
         self.placeholder = "搜索喜欢的内容"
-        self.tintColor = UIColor.colorFromHexString("#1E90FF")
+        //self.tintColor = UIColor.colorFromHexString("#1E90FF")
         self.returnKeyType = .search
         self.layer.borderWidth = 1
         self.clearButtonMode = UITextField.ViewMode.whileEditing
@@ -99,7 +99,7 @@ class JMSearchBarView: UIView {
         super.init(frame: frame)
         cancel = UIButton(type: UIButton.ButtonType.system)
         cancel.titleLabel?.font = UIFont.systemFont(ofSize: 16)
-        cancel.setTitleColor(UIColor.colorFromHexString("#1E90FF"), for: .normal)
+        //cancel.setTitleColor(UIColor.colorFromHexString("#1E90FF"), for: .normal)
         cancel.setTitle("取消", for: .normal)
         addSubview(cancel)
         cancel.snp.makeConstraints { (make) in
