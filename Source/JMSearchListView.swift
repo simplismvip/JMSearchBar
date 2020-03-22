@@ -11,7 +11,7 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-class JMSearchListView: UIView {
+open class JMSearchListView: UIView {
     open var delegate:JMSearchSelectProtocol?
     fileprivate var dataSource = [JMSearchModel]()
     private lazy var playholderView:JMSearchEmptyView = {
@@ -39,7 +39,7 @@ class JMSearchListView: UIView {
         }
     }
     
-    required init?(coder aDecoder: NSCoder) {
+    required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }

@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
   s.name             = 'JMSearchBar'
   s.version          = '0.0.2'
-  s.summary          = 'A short description of JMSearchBar.'
+  s.summary          = '一个使用Swift写的搜索组件。'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
 #   * Finally, don't worry about the indent, CocoaPods strips it!
 
   s.description      = <<-DESC
-🔍 Awesome fully customize search view like Pinterest written in Swift 4.0!
+🔍 Awesome fully customize search view like Pinterest written in Swift 5.0 hhh!
                        DESC
 
   s.homepage         = 'https://github.com/simplismvip/JMSearchBar'
@@ -28,13 +28,13 @@ Pod::Spec.new do |s|
   s.source           = { :git => 'https://github.com/simplismvip/JMSearchBar.git', :tag => s.version.to_s }
   s.social_media_url = 'http://www.restcy.com'
 
-  s.ios.deployment_target = '9.0'
+  s.ios.deployment_target = '10.0'
 
   # s.source_files = 'Source/*.{h,swift}'
   # s.resource_bundles = { 'JMSearchBar' => ['JMSearchBar/Assets/*.png'] }
 
   s.swift_version = '4.0'
-  s.platform      = :ios, '9.0'
+  s.platform      = :ios, '10.0'
   s.requires_arc  = true
 
   s.source_files = [ 'Source/*.{h,swift}' ]

@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class JMSearchView: UIView, JMSearchSelectProtocol {
+open class JMSearchView: UIView, JMSearchSelectProtocol {
     fileprivate lazy var bag = DisposeBag()
     open var searchViewDidScroll:(()->())?
     open var clickResult:((Any)->())?
@@ -42,7 +42,7 @@ class JMSearchView: UIView, JMSearchSelectProtocol {
         super.init(coder: aDecoder)
     }
     
-    func didSelectCallback<T>(model:T) {
+    public func didSelectCallback<T>(model:T) {
         clickResult?(model)
         JMSearchStore.shared.encodeModel(model as! JMSearchModel)
     }

@@ -10,7 +10,7 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-class JMSearchController: UIViewController {
+open class JMSearchController: UIViewController {
     fileprivate lazy var bag = DisposeBag()
     fileprivate var searchBar: JMSearchBarView!
     open var container: JMSearchView!
@@ -20,7 +20,7 @@ class JMSearchController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: false)
     }
     
-    override func viewWillAppear(_ animated: Bool) {
+    override open func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         navigationController?.setNavigationBarHidden(true, animated: true)
     }

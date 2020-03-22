@@ -14,8 +14,28 @@ private let minimumHitArea = CGSize(width: 44, height: 44)
 
 extension UIImage {
     static func imageNamed(bundleName name:String) -> UIImage? {
-        let path = Bundle.main.path(forResource: "JMSearch", ofType: "bundle")!+"/"+name
-        return UIImage(contentsOfFile: path)
+        
+        func findBundle(_ bundleName:String,_ podName:String) -> Bundle? {
+            if var bundleUrl = Bundle.main.url(forResource: "Frameworks", withExtension: nil) {
+                bundleUrl = bundleUrl.appendingPathComponent(podName)
+                bundleUrl = bundleUrl.appendingPathExtension("framework")
+                if let bundle = Bundle(url: bundleUrl),let url = bundle.url(forResource: bundleName, withExtension: "bundle") {
+                    return Bundle(url: url)
+                }
+                return nil
+            }
+            return nil
+        }
+                
+        if let bundle = findBundle("JMSearch", "JMSearchBar") {
+            let scare = UIScreen.main.scale
+            let imaName = String(format: "%@@%dx.png", name, Int(scare))
+            if let imagePath = bundle.path(forResource: imaName, ofType: nil) {
+                return UIImage(contentsOfFile: imagePath)
+            }
+            return nil
+        }
+        return nil
     }
 }
 

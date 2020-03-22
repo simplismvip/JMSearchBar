@@ -103,7 +103,7 @@ class JMSearchBarView: UIView {
         cancel.setTitle("取消", for: .normal)
         addSubview(cancel)
         cancel.snp.makeConstraints { (make) in
-            make.right.equalTo(self.snp_right).offset(-7)
+            make.right.equalTo(snp.right).offset(-7)
             make.top.equalTo(5)
             make.bottom.equalTo(-5)
             make.width.equalTo(34)
@@ -112,8 +112,8 @@ class JMSearchBarView: UIView {
         textField = JMTextFieldView(frame: CGRect(x: 0, y: 0, width: self.width - 50, height: self.height))
         addSubview(textField)
         textField.snp.makeConstraints { (make) in
-            make.left.equalTo(self.snp_left).offset(10)
-            make.right.equalTo(cancel.snp_left).offset(-5)
+            make.left.equalTo(snp.left).offset(10)
+            make.right.equalTo(cancel.snp.left).offset(-5)
             make.top.equalTo(5)
             make.bottom.equalTo(-5)
         }

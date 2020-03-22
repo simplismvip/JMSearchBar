@@ -239,7 +239,9 @@ class TableHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
 //        let categories = SQLHelper.share.fetchNamesData()
-//        initView(categories: categories)
+        let categories = ["text1","text2","text3","text4","text5","text6","text7","text8","text9","text10","text11","text12","text13","text14"]
+        
+        initView(categories: categories)
     }
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

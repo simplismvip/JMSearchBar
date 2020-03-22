@@ -11,14 +11,14 @@ import UIKit
 class JMSearchEmptyView: UIView {
 
     private var fackback = UIButton(type: .system)
-    private var imageV = UIImageView(image: UIImage(named: "tv_default_pic_nofollowing"))
+    private var imageV = UIImageView(image: UIImage.imageNamed(bundleName: "tv_default_pic_nofollowing"))
     override init(frame: CGRect) {
         super.init(frame: frame)
         imageV.contentMode = UIView.ContentMode.scaleAspectFill
         imageV.clipsToBounds = true;
         addSubview(imageV)
         
-        fackback.setTitle("没找到想要的,点我反馈", for: .normal)
+        fackback.setTitle("没找到想要的，点我反馈", for: .normal)
         fackback.tintColor = UIColor.gray
         fackback.addTarget(self, action: #selector(fackbackAction), for: .touchUpInside)
         addSubview(fackback)
