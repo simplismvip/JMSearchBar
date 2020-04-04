@@ -171,7 +171,7 @@ class SeatchCell: UITableViewCell {
         title.text = "测试文本"
         title.numberOfLines = 0
         title.textColor = UIColor.gray
-        title.font = UIFont.medium(15)
+        title.font = UIFont.se_medium(15)
         contentView.addSubview(title)
         
         close = UIButton(type: UIButton.ButtonType.system)
@@ -362,7 +362,7 @@ class ScrollTabView: UIView {
             btn.layer.cornerRadius = 14
             btn.tag = index + 100
             btn.tintColor = UIColor.gray
-            btn.titleLabel?.font = UIFont.medium(15)
+            btn.titleLabel?.font = UIFont.se_medium(15)
             btn.addTarget(self, action: #selector(touchAction(_:)), for: UIControl.Event.touchUpInside)
             btn.setTitle(item, for: UIControl.State.normal)
             scrollView.addSubview(btn)
