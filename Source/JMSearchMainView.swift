@@ -15,11 +15,6 @@ open class JMSearchMainView: UIView  {
     open var delegate:JMSearchSelectProtocol?
     var ynSearch = JMSearchStore()
     var dataSource = [JMSearchModel]()
-    private lazy var playholderView:JMSearchEmptyView = {
-        let emptyView = JMSearchEmptyView(frame: CGRect(x: 0, y: 200, width: width, height: height-230))
-        emptyView.backgroundColor = UIColor.white
-        return emptyView
-    }()
     
     open lazy var tableView:JMSearchTableView = {
         let tabView = JMSearchTableView(frame: self.bounds, style: .grouped)
@@ -67,34 +62,29 @@ open class JMSearchMainView: UIView  {
     }
 }
 
+// MARK: -- 协议更新数据 --
 extension JMSearchMainView:JMSearchViewProtocol {
+    public func reloadDatasource(_ dataArr: [JMSearchModel]) {
+        dataSource.append(contentsOf: dataArr)
+        tableView.reloadData()
+    }
     
-    public func reloadDatasource<T>(_ dataArr: [T]) {
-        if dataArr is [JMSearchModel] {
-            dataSource = dataArr as! [JMSearchModel]
+    public func refashTableView(_ model: JMSearchModel) {
+        var isExist = false
+        for newValue in dataSource {
+            if newValue.title == model.title {
+                isExist = true
+                break
+            }
+        }
+        if !isExist {
+            dataSource.insert(model, at: 0)
             tableView.reloadData()
         }
     }
     
-    public func refashTableView<T>(_ model: T) {
-        
-        if let value = model as? JMSearchModel {
-            var isExist = false
-            for newValue in dataSource {
-                if newValue.title == value.title {
-                    isExist = true
-                    break
-                }
-            }
-            if !isExist {
-                dataSource.insert(value, at: 0)
-                tableView.reloadData()
-            }
-        }
-    }
-    
-    public func configEmptyView() -> UIView? {
-        return playholderView
+    public func setTableHeader(_ titles:[String]) {
+        headerView.initView(categories: titles)
     }
 }
 
@@ -121,12 +111,10 @@ extension JMSearchMainView:UITableViewDelegate,UITableViewDataSource {
     }
     
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        
         delegate?.didSelectCallback(model: dataSource[indexPath.row])
     }
     
     public func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
         var headerViw = tableView.dequeueReusableHeaderFooterView(withIdentifier: "header")
         if headerViw == nil {
             headerViw = HeaderView(frame: CGRect(x: 0, y: 0, width: self.width, height: 35))
@@ -136,7 +124,7 @@ extension JMSearchMainView:UITableViewDelegate,UITableViewDataSource {
         newHeader.clearAllBlock = { [weak self] in
             self?.dataSource.removeAll()
             tableView.reloadData()
-            if let cacheDirectory = NSSearchPathForDirectoriesInDomains(FileManager.SearchPathDirectory.cachesDirectory, FileManager.SearchPathDomainMask.userDomainMask, true).last {
+            if let cacheDirectory = NSSearchPathForDirectoriesInDomains(.cachesDirectory, .userDomainMask, true).last {
                 let path = cacheDirectory+"/history"
                 JMSearchStore.shared.deleteDecode(path)
             }
@@ -150,7 +138,6 @@ extension JMSearchMainView:UITableViewDelegate,UITableViewDataSource {
 }
 
 class SeatchCell: UITableViewCell {
-    
     var title:UILabel!
     open var closeCurrentBlock:((String)->())?
     open var close:UIButton!
@@ -195,33 +182,31 @@ class SeatchCell: UITableViewCell {
         imaView.snp.makeConstraints { (make) in
             make.width.height.equalTo(15)
             make.left.equalTo(contentView).offset(8)
-            make.centerY.equalTo(contentView.snp_centerY)
+            make.centerY.equalTo(contentView.snp.centerY)
         }
         
         close.snp.makeConstraints { (make) in
             make.height.width.equalTo(34)
-            make.right.equalTo(self.snp_right).offset(-8)
-            make.centerY.equalTo(imaView.snp_centerY)
+            make.right.equalTo(self.snp.right).offset(-8)
+            make.centerY.equalTo(imaView.snp.centerY)
         }
         
         spliteLine.snp.makeConstraints { (make) in
             make.left.equalTo(self).offset(8)
             make.right.equalTo(self).offset(-8)
             make.height.equalTo(1)
-            make.bottom.equalTo(self.snp_bottom)
+            make.bottom.equalTo(self.snp.bottom)
         }
         
         title.snp.makeConstraints { (make) in
-            make.left.equalTo(imaView.snp_right).offset(8)
-            make.right.equalTo(close.snp_left).offset(-8)
-            make.bottom.equalTo(spliteLine.snp_top)
-            make.top.equalTo(self.snp_top)
+            make.left.equalTo(imaView.snp.right).offset(8)
+            make.right.equalTo(close.snp.left).offset(-8)
+            make.bottom.equalTo(spliteLine.snp.top)
+            make.top.equalTo(self.snp.top)
         }
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder aDecoder: NSCoder) { fatalError(" implemented") }
 }
 
 class TableHeaderView: UIView {
@@ -240,13 +225,9 @@ class TableHeaderView: UIView {
         super.init(frame: frame)
 //        let categories = SQLHelper.share.fetchNamesData()
         let categories = ["text1","text2","text3","text4","text5","text6","text7","text8","text9","text10","text11","text12","text13","text14"]
-        
-        initView(categories: categories)
+//        initView(categories: categories)
     }
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
+    required init?(coder aDecoder: NSCoder) { fatalError("implemented") }
     open func initView(categories: [String]) {
         tabHeaderLabel.text = "推荐下载"
         tabHeaderLabel.font = UIFont.systemFont(ofSize: 14)
@@ -331,13 +312,11 @@ class HeaderView: UITableViewHeaderFooterView {
         
         clearHistory.snp.makeConstraints { (make) in
             make.height.equalTo(30)
-            make.right.equalTo(self.snp_right).offset(-8)
+            make.right.equalTo(self.snp.right).offset(-8)
         }
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder aDecoder: NSCoder) { fatalError("implemented") }
 }
 
 // 头部 View 类型滑动
@@ -352,9 +331,7 @@ class ScrollTabView: UIView {
         update()
     }
     
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required init?(coder aDecoder: NSCoder) { fatalError("implemented") }
     
     func update() {
         for (index,item) in items.enumerated() {

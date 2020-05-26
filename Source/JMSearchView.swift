@@ -11,11 +11,10 @@ import RxCocoa
 import RxSwift
 
 open class JMSearchView: UIView, JMSearchSelectProtocol {
-    fileprivate lazy var bag = DisposeBag()
-    open var searchViewDidScroll:(()->())?
-    open var clickResult:((Any)->())?
+    private let bag = DisposeBag()
     open var mainView: JMSearchMainView!
     open var listView: JMSearchListView!
+    open var delegate:JMSearchControllerProtocol?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -36,14 +35,14 @@ open class JMSearchView: UIView, JMSearchSelectProtocol {
         // 调用方法
         regietSearchContentEvent()
         startMainContent()
+        
+        
     }
     
-    required public init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
+    required public init?(coder aDecoder: NSCoder) { super.init(coder: aDecoder) }
     
-    public func didSelectCallback<T>(model:T) {
-        clickResult?(model)
+    open func didSelectCallback<T>(model:T) {
+        delegate?.didSelectResult(model as! JMSearchModel)
         JMSearchStore.shared.encodeModel(model as! JMSearchModel)
     }
 }
@@ -55,7 +54,7 @@ extension JMSearchView {
             mainView.tableView.rx.contentOffset,
                                  listView.tableView.rx.contentOffset)
             .subscribe(onNext: { [weak self] (_) in
-            self?.searchViewDidScroll?()
+                self?.delegate?.searchViewDidScroll()
         } ).disposed(by: bag)
     }
     

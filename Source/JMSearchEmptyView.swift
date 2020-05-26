@@ -9,7 +9,6 @@
 import UIKit
 
 class JMSearchEmptyView: UIView {
-
     private var fackback = UIButton(type: .system)
     private var imageV = UIImageView(image: UIImage.imageNamed(bundleName: "tv_default_pic_nofollowing"))
     override init(frame: CGRect) {

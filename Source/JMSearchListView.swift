@@ -11,15 +11,9 @@ import SnapKit
 import RxSwift
 import RxCocoa
 
-open class JMSearchListView: UIView {
+open class JMSearchListView: UIView,JMSearchViewProtocol {
     open var delegate:JMSearchSelectProtocol?
-    fileprivate var dataSource = [JMSearchModel]()
-    private lazy var playholderView:JMSearchEmptyView = {
-        let emptyView = JMSearchEmptyView(frame: self.bounds)
-        emptyView.backgroundColor = UIColor.RGB(250, 250, 250)
-        return emptyView
-    }()
-    
+    private var dataSource = [JMSearchModel]()
     open lazy var tableView:JMSearchTableView = {
         let tabView = JMSearchTableView(frame: self.bounds, style: .plain)
         tabView.register(SeatchCell.self, forCellReuseIdentifier: "cellid")
@@ -39,9 +33,7 @@ open class JMSearchListView: UIView {
         }
     }
     
-    required public init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
+    required public init?(coder aDecoder: NSCoder) { fatalError("implemented") }
 }
 
 extension JMSearchListView:UITableViewDelegate,UITableViewDataSource {
@@ -52,9 +44,7 @@ extension JMSearchListView:UITableViewDelegate,UITableViewDataSource {
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         var cell = tableView.dequeueReusableCell(withIdentifier: "cellid")
-        if cell == nil {
-            cell = SeatchCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cellid")
-        }
+        if cell == nil { cell = SeatchCell(style: UITableViewCell.CellStyle.default, reuseIdentifier: "cellid") }
         let newCell = cell as! SeatchCell
         let model = dataSource[indexPath.row]
         newCell.title.text = model.title
@@ -72,22 +62,20 @@ extension JMSearchListView:UITableViewDelegate,UITableViewDataSource {
     }
 }
 
-
-extension JMSearchListView:JMSearchViewProtocol {
-    
+extension JMSearchListView {
     public func configEmptyView() -> UIView? {
-        return playholderView
+        let emptyView = JMSearchEmptyView(frame: self.bounds)
+        emptyView.backgroundColor = UIColor.RGB(250, 250, 250)
+        return emptyView
     }
     
-    public func reloadDatasource<T>(_ dataArr: [T]) {
-        if dataArr is [JMSearchModel] {
-            dataSource = dataArr as! [JMSearchModel]
-            tableView.reloadData()
-        }
+    public func reloadDatasource(_ dataArr: [JMSearchModel]) {
+        dataSource.append(contentsOf: dataSource)
+        tableView.reloadData()
     }
     
-    public func refashTableView<T>(_ model: T) {
-        dataSource.insert(model as! JMSearchModel, at: 0)
+    public func refashTableView(_ model: JMSearchModel) {
+        dataSource.insert(model, at: 0)
         tableView.reloadData()
     }
 }

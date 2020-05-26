@@ -8,18 +8,16 @@
 
 import UIKit
 
-class JMSearchModel: Codable {
-    var leftIcon:String = "search_history"
-    var rightIcon:String = "close"
-    var download:Bool = false
-    var title:String?
+open class JMSearchModel: Codable {
+    open var leftIcon:String = "search_history"
+    open var rightIcon:String = "close"
+    open var download:Bool = false
+    open var title:String?
     
     // 需要传递的Model，但是需要遵循Codable协议
-//    var temp:Model?
+    // var temp:Model?
     
-    init(title name:String){
+    public init(title name:String){
         self.title = name
     }
-    
-    init() {}
 }

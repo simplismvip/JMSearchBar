@@ -10,11 +10,10 @@ import UIKit
 import RxCocoa
 import RxSwift
 
-open class JMSearchController: UIViewController {
-    fileprivate lazy var bag = DisposeBag()
-    fileprivate var searchBar: JMSearchBarView!
+open class JMSearchController: UIViewController,JMSearchControllerProtocol {
+    private let bag = DisposeBag()
+    private var searchBar: JMSearchBarView!
     open var container: JMSearchView!
-    
     override open func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         navigationController?.setNavigationBarHidden(false, animated: false)
@@ -27,17 +26,6 @@ open class JMSearchController: UIViewController {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
-        setupSubViews()
-        regietSearchBarEvent()
-        regietSearchContentEvent()
-        setHeaderBackgroundType(type: .typeColorful)
-    }
-    
-    open func pushViewController(_ bookName:String) {
-        
-    }
-    
-    open func setupSubViews() {
         searchBar = JMSearchBarView(frame: CGRect(x:0, y:0, width:self.view.width, height:44))
         view.addSubview(searchBar)
         searchBar.snp.makeConstraints { (make) in
@@ -51,22 +39,44 @@ open class JMSearchController: UIViewController {
         }
         
         container = JMSearchView(frame: CGRect(x:0, y:0, width:0, height:0))
+        container.delegate = self
         view.addSubview(container)
         container.snp.makeConstraints { (make) in
-            make.top.equalTo(searchBar.snp_bottom)
+            make.top.equalTo(searchBar.snp.bottom)
             make.width.equalTo(self.view)
             make.bottom.equalTo(self.view)
         }
+        
+        setTableHeaderTltles()
+        regietSearchBarEvent()
+        setHeaderBackgroundType(type: .typeColorful)
     }
     
     open func setHeaderBackgroundType(type: JMCustomButtonType) {
         container.mainView.setBtnBackground(type: type)
     }
+    
+    open func searchViewDidScroll() {
+        view.endEditing(true)
+    }
+    
+    // MARK: -- 必须重写的代码 --
+    open func reloadListResult(_ text:String) ->[JMSearchModel] {
+        return [JMSearchModel]()
+    }
+    
+    open func didSelectResult(_ model:JMSearchModel) {
+        
+    }
+    
+    open func setTableHeaderTltles() {
+        let categories = ["text1","text2","text3","text4","text5","text6","text7","text8","text9","text10","text11","text12","text13","text14"]
+        container.mainView.setTableHeader(categories)
+    }
 }
 
 extension JMSearchController {
     func regietSearchBarEvent() {
-        
         // 文本存在的时候隐藏，不存在显示
         // $0.count > 0
         searchBar.textField.rx.text.orEmpty.map { $0.count == 0 }.share(replay: 1).distinctUntilChanged().subscribe(onNext: { [weak self] (mainHide:Bool) in
@@ -80,10 +90,10 @@ extension JMSearchController {
                 print("内容输出:\($0)")
                 let querytext = $0
                 DispatchQueue.global().async {
-//                    let result = SQLHelper.share.fetchSearchResultData(querytext)
-//                    DispatchQueue.main.async {
-//                        self?.container.listView.reloadDatasource(result)
-//                    }
+                    let data = self?.reloadListResult(querytext)
+                    DispatchQueue.main.async {
+                        self?.container.listView.reloadDatasource(data!)
+                    }
                 }
             }).disposed(by: bag)
         
@@ -110,29 +120,6 @@ extension JMSearchController {
                 self?.dismiss(animated: true, completion: nil)
             }
         }).disposed(by: bag)
-    }
-    
-    func regietSearchContentEvent() {
-        // 收回键盘
-        container.searchViewDidScroll = { [weak self] in
-            self?.view.endEditing(true)
-        }
-        
-        // 点击搜索结构
-        container.clickResult = { [weak self] model in
-            print("store success, next step push")
-            if let newModel = model as? JMSearchModel {
-                self?.pushViewController(newModel.title!)
-            }
-        }
-    }
-    
-    func searchRun(_ key:String) {
-        var result = [String]()
-        for i in 0 ... key.count {
-            result.append("text:\(i)")
-        }
-        container.listView.reloadDatasource(result)
     }
     
     func switchMainAndListView(mainHide:Bool) {
