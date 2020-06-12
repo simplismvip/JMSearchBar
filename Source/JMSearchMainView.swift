@@ -15,7 +15,6 @@ open class JMSearchMainView: UIView  {
     open var delegate:JMSearchSelectProtocol?
     var ynSearch = JMSearchStore()
     var dataSource = [JMSearchModel]()
-    
     open lazy var tableView:JMSearchTableView = {
         let tabView = JMSearchTableView(frame: self.bounds, style: .grouped)
         tabView.register(SeatchCell.self, forCellReuseIdentifier: "cellid")
@@ -37,8 +36,7 @@ open class JMSearchMainView: UIView  {
             headerV.bounds = newBounds
             self.tableView.tableHeaderView = headerV
         }
-        headerV.tabHeaderClick = { [weak self] text in
-            let model = JMSearchModel(title: text)
+        headerV.tabHeaderClick = { [weak self] model in
             self?.delegate?.didSelectCallback(model: model)
             self?.refashTableView(model)
         }
@@ -65,7 +63,7 @@ open class JMSearchMainView: UIView  {
 // MARK: -- 协议更新数据 --
 extension JMSearchMainView:JMSearchViewProtocol {
     public func reloadDatasource(_ dataArr: [JMSearchModel]) {
-        dataSource.append(contentsOf: dataArr)
+        dataSource = dataArr
         tableView.reloadData()
     }
     
@@ -83,7 +81,7 @@ extension JMSearchMainView:JMSearchViewProtocol {
         }
     }
     
-    public func setTableHeader(_ titles:[String]) {
+    public func setTableHeader(_ titles:[JMSearchModel]) {
         headerView.initView(categories: titles)
     }
 }
@@ -215,27 +213,26 @@ class TableHeaderView: UIView {
         willSet { updateSizeHeight?(newValue) }
     }
     public var updateSizeHeight:((CGFloat)->())?
-    public var tabHeaderClick:((String)->())?
+    public var tabHeaderClick:((JMSearchModel)->())?
     
     //private var tabHeaderLabel = ScrollTabView()
     private var tabHeaderLabel = UILabel()
     private var customButtons = [JMCustomButton]()
+    private var models:[JMSearchModel]?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-//        let categories = SQLHelper.share.fetchNamesData()
-        let categories = ["text1","text2","text3","text4","text5","text6","text7","text8","text9","text10","text11","text12","text13","text14"]
-//        initView(categories: categories)
     }
     required init?(coder aDecoder: NSCoder) { fatalError("implemented") }
-    open func initView(categories: [String]) {
+    open func initView(categories: [JMSearchModel]) {
+        models = categories
         tabHeaderLabel.text = "推荐下载"
         tabHeaderLabel.font = UIFont.systemFont(ofSize: 14)
         addSubview(tabHeaderLabel)
         for i in 0..<categories.count {
             let button = JMCustomButton(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
             button.addTarget(self, action: #selector(buttonClicked(_:)), for: .touchUpInside)
-            button.setTitle(categories[i], for: .normal)
+            button.setTitle(categories[i].title, for: .normal)
             customButtons.append(button)
             addSubview(button)
         }
@@ -270,7 +267,8 @@ class TableHeaderView: UIView {
     
     @objc open func buttonClicked(_ sender: UIButton) {
         if let text = sender.titleLabel?.text {
-            tabHeaderClick?(text)
+            let result = models?.filter({ $0.title == text })
+            if let value = result?.first { tabHeaderClick?(value) }
         }
     }
     

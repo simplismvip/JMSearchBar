@@ -13,6 +13,10 @@ open class JMSearchModel: Codable {
     open var rightIcon:String = "close"
     open var download:Bool = false
     open var title:String?
+    open var urlname:String?
+    open var book_id:String?
+    open var desc:String?
+    open var cover:String?
     
     // 需要传递的Model，但是需要遵循Codable协议
     // var temp:Model?

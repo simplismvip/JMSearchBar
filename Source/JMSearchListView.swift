@@ -70,7 +70,7 @@ extension JMSearchListView {
     }
     
     public func reloadDatasource(_ dataArr: [JMSearchModel]) {
-        dataSource.append(contentsOf: dataSource)
+        dataSource = dataArr
         tableView.reloadData()
     }
     

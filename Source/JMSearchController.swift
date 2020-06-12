@@ -26,6 +26,7 @@ open class JMSearchController: UIViewController,JMSearchControllerProtocol {
     
     override open func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = UIColor.white
         searchBar = JMSearchBarView(frame: CGRect(x:0, y:0, width:self.view.width, height:44))
         view.addSubview(searchBar)
         searchBar.snp.makeConstraints { (make) in
@@ -70,7 +71,7 @@ open class JMSearchController: UIViewController,JMSearchControllerProtocol {
     }
     
     open func setTableHeaderTltles() {
-        let categories = ["text1","text2","text3","text4","text5","text6","text7","text8","text9","text10","text11","text12","text13","text14"]
+        let categories = [JMSearchModel(title: ""),JMSearchModel(title: "")]
         container.mainView.setTableHeader(categories)
     }
 }
@@ -90,9 +91,10 @@ extension JMSearchController {
                 print("内容输出:\($0)")
                 let querytext = $0
                 DispatchQueue.global().async {
-                    let data = self?.reloadListResult(querytext)
-                    DispatchQueue.main.async {
-                        self?.container.listView.reloadDatasource(data!)
+                    if let data = self?.reloadListResult(querytext) {
+                        DispatchQueue.main.async {
+                            self?.container.listView.reloadDatasource(data)
+                        }
                     }
                 }
             }).disposed(by: bag)

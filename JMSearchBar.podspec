@@ -45,5 +45,4 @@ Pod::Spec.new do |s|
   s.dependency 'SnapKit'
   s.dependency 'RxCocoa'
   s.dependency 'RxSwift'
-  s.dependency 'ZJMKit'
 end
